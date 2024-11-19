@@ -67,7 +67,7 @@ public class Tweet {
 	)
 	@Getter 
 	@Setter
-	private Set<User> user_likes = new HashSet<>();
+	private Set<User> likes = new HashSet<>();
 	
 	@ManyToMany
 	@JoinTable(
@@ -77,7 +77,7 @@ public class Tweet {
 	)
 	@Getter 
 	@Setter
-	private Set<User> user_mentions = new HashSet<>();
+	private Set<User> mentions = new HashSet<>();
 	
 	@ManyToMany
 	@JoinTable(
@@ -87,5 +87,5 @@ public class Tweet {
 	)
 	@Getter 
 	@Setter
-	private Set<Hashtag> tweet_hashtags = new HashSet<>();
+	private Set<Hashtag> hashtags = new HashSet<>();
 }
