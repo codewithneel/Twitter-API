@@ -20,7 +20,7 @@ public class Hashtag {
 
 	@Id
 	@GeneratedValue
-	@OneToMany(mappedBy = "hashtag_id")
+	@OneToMany(mappedBy = "hashtags")
 	private Long id;
 	
 	@Column(unique = true)
