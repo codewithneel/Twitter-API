@@ -14,7 +14,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -68,7 +70,7 @@ public class Tweet {
 	)
 	@Getter 
 	@Setter
-	private Set<User> likes = new HashSet<>();
+	private List<User> likes = new ArrayList<>();
 	
 	@ManyToMany
 	@JoinTable(
@@ -78,7 +80,7 @@ public class Tweet {
 	)
 	@Getter 
 	@Setter
-	private Set<User> mentions = new HashSet<>();
+	private List<User> mentionedUsers = new ArrayList<>();
 	
 	@ManyToMany
 	@JoinTable(
@@ -88,5 +90,5 @@ public class Tweet {
 	)
 	@Getter 
 	@Setter
-	private Set<Hashtag> hashtags = new HashSet<>();
+	private List<Hashtag> hashtags = new ArrayList<>();
 }

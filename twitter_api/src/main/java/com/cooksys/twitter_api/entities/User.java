@@ -33,6 +33,9 @@ public class User {
     @JoinTable(name="followers_following", joinColumns = @JoinColumn(name="followers_id"), inverseJoinColumns = @JoinColumn(name="following_id"))
     private List<User> followers;
     
+    @OneToMany(mappedBy="author")
+    private List<Tweet> tweets; 
+    
     @Embedded
     private Credentials credentials; 
     
