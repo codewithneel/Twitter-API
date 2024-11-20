@@ -13,8 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 public class TweetResponseDto {
 	private Long id; 
 	
