@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Generated;
@@ -13,18 +15,24 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @Data
+@Table(name="user_table")
 public class User {
 
     @Id
     @GeneratedValue
     private long id;
-
-    @GeneratedValue
+    
+    @CreationTimestamp
     private Timestamp timestamp;
 
     private boolean deleted;
 
     @ManyToMany
+    @JoinTable(
+    	name = "followers_following", 
+    	joinColumns = @JoinColumn(name = "follower_id"),
+    	inverseJoinColumns = @JoinColumn(name = "following_id")
+    )
     private List<User> followers = new ArrayList<>();
     
     @ManyToMany(mappedBy = "followers")
@@ -33,7 +41,7 @@ public class User {
     @OneToMany(mappedBy="author")
     private List<Tweet> tweets = new ArrayList<>(); 
     
-    @ManyToMany(mappedBy = "likes")
+    @ManyToMany(mappedBy = "tlikes")
     private List<Tweet> likes = new ArrayList<>();
     
     @ManyToMany(mappedBy = "mentionedUsers")

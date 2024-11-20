@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface UserService {
 
-    List<ProfileDto> getProfiles();
-
-    List<User> getUsers();
+//    List<ProfileDto> getProfiles();
+//
+//    List<User> getUsers();
 
 
 }

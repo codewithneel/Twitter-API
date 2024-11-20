@@ -18,47 +18,47 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
-    @GetMapping("/@{username}/mentions}")
-    public List<TweetRequestDto> retrieveUserMentions(@PathVariable String username) {
-        List<TweetRequestDto> tweets = new ArrayList<>();
-        return tweets;
-    }
-
-    @PostMapping("/@{username}/unfollow")
-    public UserResponseDto unfollowUser(@PathVariable String username){
-        UserResponseDto unfollowed = new UserResponseDto();
-        return unfollowed;
-    }
-
-    @GetMapping("/@{username}/feed}")
-    public List<TweetResponseDto> retrieveFeed(@PathVariable String username) {
-        List<TweetResponseDto> fullFeed = new ArrayList<>();
-        return fullFeed;
-    }
-
-    @PostMapping("/@{username}/follow")
-    public UserResponseDto followUser(@PathVariable String username){
-        UserResponseDto followed = new UserResponseDto();
-        return followed;
-    }
-
-    @GetMapping("/@{username}/tweets")
-    public List<TweetResponseDto> retrieveAllTweets(@PathVariable String username){
-        List<TweetResponseDto> allTweets = new ArrayList<>();
-        return allTweets;
-    }
-
-    @DeleteMapping("user/@{username}")
-    public UserResponseDto deleteUser(@PathVariable String username){
-        UserResponseDto deletedUser = new UserResponseDto();
-        return deletedUser;
-    }
-
-    @GetMapping("users/@{username}/followers")
-    public List<UserResponseDto> retrieveFollowers(@PathVariable String username){
-        List<UserResponseDto> followers = new ArrayList<>();
-        return followers;
-    }
+//    @GetMapping("/@{username}/mentions}")
+//    public List<TweetRequestDto> retrieveUserMentions(@PathVariable String username) {
+//        List<TweetRequestDto> tweets = new ArrayList<>();
+//        return tweets;
+//    }
+//
+//    @PostMapping("/@{username}/unfollow")
+//    public UserResponseDto unfollowUser(@PathVariable String username){
+//        UserResponseDto unfollowed = new UserResponseDto();
+//        return unfollowed;
+//    }
+//
+//    @GetMapping("/@{username}/feed}")
+//    public List<TweetResponseDto> retrieveFeed(@PathVariable String username) {
+//        List<TweetResponseDto> fullFeed = new ArrayList<>();
+//        return fullFeed;
+//    }
+//
+//    @PostMapping("/@{username}/follow")
+//    public UserResponseDto followUser(@PathVariable String username){
+//        UserResponseDto followed = new UserResponseDto();
+//        return followed;
+//    }
+//
+//    @GetMapping("/@{username}/tweets")
+//    public List<TweetResponseDto> retrieveAllTweets(@PathVariable String username){
+//        List<TweetResponseDto> allTweets = new ArrayList<>();
+//        return allTweets;
+//    }
+//
+//    @DeleteMapping("user/@{username}")
+//    public UserResponseDto deleteUser(@PathVariable String username){
+//        UserResponseDto deletedUser = new UserResponseDto();
+//        return deletedUser;
+//    }
+//
+//    @GetMapping("users/@{username}/followers")
+//    public List<UserResponseDto> retrieveFollowers(@PathVariable String username){
+//        List<UserResponseDto> followers = new ArrayList<>();
+//        return followers;
+//    }
 
     // Needs to add Patch Users, Get Users Following and Get Users username
 
