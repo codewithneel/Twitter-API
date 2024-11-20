@@ -8,6 +8,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,46 +22,40 @@ import java.util.Set;
 
 @Entity
 @NoArgsConstructor
+@Data
 public class Tweet {
 	
 	@Id
 	@GeneratedValue
-	@Getter
 	private Long id; 
 	
 	@ManyToOne
 	@JoinColumn
 	@Column(nullable=false)
-	@Getter
-	@Setter
 	private User author;
 	
 	@Column(nullable=false)
-	@Getter 
-	@Setter
 	private Timestamp posted; 
 	
 	@Column(nullable=false)
-	@Getter 
-	@Setter
 	private boolean deleted = false;
 	
-	@Getter 
-	@Setter
 	private String content; 
 	
 	//self referencing relationship
 	@ManyToOne
 	@JoinColumn
-	@Getter 
-	@Setter
 	private Tweet inReplyTo;
+	
+	@OneToMany(mappedBy = "inReplyTo")
+	private List<Tweet> replies = new ArrayList<>();
 	
 	@ManyToOne
 	@JoinColumn
-	@Getter 
-	@Setter
 	private Tweet repostOf;
+	
+	@OneToMany(mappedBy = "repostOf")
+	private List<Tweet> reposts = new ArrayList<>();
 	
 	@ManyToMany
 	@JoinTable(
@@ -68,8 +63,6 @@ public class Tweet {
 		joinColumns = @JoinColumn(name = "tweet_id"),
 		inverseJoinColumns = @JoinColumn(name = "user_id")
 	)
-	@Getter 
-	@Setter
 	private List<User> likes = new ArrayList<>();
 	
 	@ManyToMany
@@ -78,8 +71,6 @@ public class Tweet {
 		joinColumns = @JoinColumn(name = "tweet_id"),
 		inverseJoinColumns = @JoinColumn(name = "user_id")
 	)
-	@Getter 
-	@Setter
 	private List<User> mentionedUsers = new ArrayList<>();
 	
 	@ManyToMany
@@ -88,7 +79,7 @@ public class Tweet {
 		joinColumns = @JoinColumn(name = "tweet_id"),
 		inverseJoinColumns = @JoinColumn(name = "hashtag_id")
 	)
-	@Getter 
-	@Setter
 	private List<Hashtag> hashtags = new ArrayList<>();
+	
+	
 }

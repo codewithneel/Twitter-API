@@ -8,12 +8,8 @@ import com.cooksys.twitter_api.entities.Tweet;
 
 public class TweetRequestDto {
 	
-	private UserRequestDto author;
+	private CredentialsDto credentialsDto; 
 	
 	private String content;
-	
-	private TweetRequestDto inReplyTo;
-	
-	private TweetRequestDto repostOf;
 	
 }

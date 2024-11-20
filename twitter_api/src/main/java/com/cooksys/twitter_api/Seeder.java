@@ -1,6 +1,6 @@
-package com.cooksys.socialmedia;
+package com.cooksys.twitter_api;
 
-import com.cooksys.socialmedia.entities.*;
+
 import com.cooksys.twitter_api.entities.Credentials;
 import com.cooksys.twitter_api.entities.Hashtag;
 import com.cooksys.twitter_api.entities.Profile;
@@ -9,6 +9,7 @@ import com.cooksys.twitter_api.entities.User;
 import com.cooksys.twitter_api.repositories.HashtagRepository;
 import com.cooksys.twitter_api.repositories.TweetRepository;
 import com.cooksys.twitter_api.repositories.UserRepository;
+
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
