@@ -1,11 +1,10 @@
 package com.cooksys.twitter_api.dtos;
 
-import java.sql.Timestamp;
-import java.util.HashSet;
-import java.util.Set;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import com.cooksys.twitter_api.entities.Tweet;
-
+@Data
+@NoArgsConstructor
 public class TweetRequestDto {
 	
 	private CredentialsDto credentials;
