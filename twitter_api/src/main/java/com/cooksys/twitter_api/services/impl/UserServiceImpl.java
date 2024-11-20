@@ -12,15 +12,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Override
-    public List<ProfileDto> getProfiles() {
-        return null;
-    }
-
-
-
-    @Override
-    public List<User> getUsers() {
-        return null;
-    }
+//    @Override
+//    public List<ProfileDto> getProfiles() {
+//        return null;
+//    }
+//
+//
+//
+//    @Override
+//    public List<User> getUsers() {
+//        return null;
+//    }
 }

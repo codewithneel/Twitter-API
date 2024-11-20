@@ -20,6 +20,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 @Entity
 @NoArgsConstructor
 @Data
@@ -30,10 +32,11 @@ public class Tweet {
 	private Long id; 
 	
 	@ManyToOne
-	@Column(nullable=false)
+	@JoinColumn(nullable=false)
 	private User author;
 	
 	@Column(nullable=false)
+	@CreationTimestamp
 	private Timestamp posted; 
 	
 	@Column(nullable=false)
@@ -55,12 +58,27 @@ public class Tweet {
 	private List<Tweet> reposts = new ArrayList<>();
 	
 	@ManyToMany
-	private List<User> likes = new ArrayList<>();
+	@JoinTable(
+		name = "user_likes", 
+		joinColumns = @JoinColumn(name = "tweet_id"),
+		inverseJoinColumns = @JoinColumn(name = "user_id")
+	)
+	private List<User> tlikes = new ArrayList<>();
 	
 	@ManyToMany
+	@JoinTable(
+		name = "user_mentions", 
+		joinColumns = @JoinColumn(name = "tweet_id"),
+		inverseJoinColumns = @JoinColumn(name = "user_id")
+	)
 	private List<User> mentionedUsers = new ArrayList<>();
 	
 	@ManyToMany
+	@JoinTable(
+		name = "tweet_hashtags", 
+		joinColumns = @JoinColumn(name = "tweet_id"),
+		inverseJoinColumns = @JoinColumn(name = "user_id")
+	)
 	private List<Hashtag> hashtags = new ArrayList<>();
 	
 	
