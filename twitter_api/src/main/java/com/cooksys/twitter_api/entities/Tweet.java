@@ -30,7 +30,6 @@ public class Tweet {
 	private Long id; 
 	
 	@ManyToOne
-	@JoinColumn
 	@Column(nullable=false)
 	private User author;
 	
@@ -44,41 +43,24 @@ public class Tweet {
 	
 	//self referencing relationship
 	@ManyToOne
-	@JoinColumn
 	private Tweet inReplyTo;
 	
 	@OneToMany(mappedBy = "inReplyTo")
 	private List<Tweet> replies = new ArrayList<>();
 	
 	@ManyToOne
-	@JoinColumn
 	private Tweet repostOf;
 	
 	@OneToMany(mappedBy = "repostOf")
 	private List<Tweet> reposts = new ArrayList<>();
 	
 	@ManyToMany
-	@JoinTable(
-		name = "user_likes",
-		joinColumns = @JoinColumn(name = "tweet_id"),
-		inverseJoinColumns = @JoinColumn(name = "user_id")
-	)
 	private List<User> likes = new ArrayList<>();
 	
 	@ManyToMany
-	@JoinTable(
-		name = "user_mentions",
-		joinColumns = @JoinColumn(name = "tweet_id"),
-		inverseJoinColumns = @JoinColumn(name = "user_id")
-	)
 	private List<User> mentionedUsers = new ArrayList<>();
 	
 	@ManyToMany
-	@JoinTable(
-		name = "tweet_hashtags",
-		joinColumns = @JoinColumn(name = "tweet_id"),
-		inverseJoinColumns = @JoinColumn(name = "hashtag_id")
-	)
 	private List<Hashtag> hashtags = new ArrayList<>();
 	
 	

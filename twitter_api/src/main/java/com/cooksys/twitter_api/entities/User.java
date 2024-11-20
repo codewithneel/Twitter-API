@@ -25,7 +25,6 @@ public class User {
     private boolean deleted;
 
     @ManyToMany
-    @JoinTable(name="followers_following", joinColumns = @JoinColumn(name="followers_id"), inverseJoinColumns = @JoinColumn(name="following_id"))
     private List<User> followers = new ArrayList<>();
     
     @ManyToMany(mappedBy = "followers")

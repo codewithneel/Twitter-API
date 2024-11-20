@@ -8,7 +8,7 @@ import com.cooksys.twitter_api.entities.Tweet;
 
 public class TweetRequestDto {
 	
-	private CredentialsDto credentialsDto; 
+	private CredentialsDto credentials;
 	
 	private String content;
 	

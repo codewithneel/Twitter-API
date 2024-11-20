@@ -242,17 +242,17 @@ public class Seeder implements CommandLineRunner {
         userRepository.saveAndFlush(user3);
 
         // ----- List of Liked Tweets -----
-        user1.setLikedTweets(user3Tweets);
+        user1.setLikes(user3Tweets);
         userRepository.saveAndFlush(user1);
 
-        user2.setLikedTweets(user1Tweets);
-        user2.setLikedTweets(user2Tweets);
+        user2.setLikes(user1Tweets);
+        user2.setLikes(user2Tweets);
         userRepository.saveAndFlush(user2);
 
-        user3.setLikedTweets(user2Tweets);
+        user3.setLikes(user2Tweets);
         userRepository.saveAndFlush(user3);
         
-        deletedUser.setLikedTweets(user2Tweets);
+        deletedUser.setLikes(user2Tweets);
         userRepository.saveAndFlush(deletedUser);
 
         // ----- List of Following -----

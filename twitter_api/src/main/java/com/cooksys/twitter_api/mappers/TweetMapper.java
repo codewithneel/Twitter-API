@@ -9,7 +9,7 @@ import com.cooksys.twitter_api.dtos.TweetResponseDto;
 import com.cooksys.twitter_api.entities.Tweet;
 import com.cooksys.twitter_api.entities.User;
 
-@Mapper(componentModel = "spring", uses = { User.class })
+@Mapper(componentModel = "spring", uses = { UserMapper.class })
 
 public interface TweetMapper {
 	
