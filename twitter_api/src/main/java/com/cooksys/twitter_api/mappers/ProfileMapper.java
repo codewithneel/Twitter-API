@@ -12,7 +12,7 @@ public interface ProfileMapper {
 
     ProfileDto ProfEntToDto(Profile prof);
 
-    Profile ProfDtoToEnt(ProfileDto);
+    Profile ProfDtoToEnt(ProfileDto profileDto);
 
     List<ProfileDto> ProfEntstoDtos(List<Profile> profiles);
 

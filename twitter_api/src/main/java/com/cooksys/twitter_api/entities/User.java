@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @Data
-@Embedded
 public class User {
 
     @Id
@@ -33,4 +32,12 @@ public class User {
     @ManyToMany
     @JoinTable(name="followers_following", joinColumns = @JoinColumn(name="followers_id"), inverseJoinColumns = @JoinColumn(name="following_id"))
     private List<User> followers;
+    
+    @Embedded
+    private Credentials credentials; 
+    
+    @Embedded
+    private Profile profile; 
+    
+    
 }
