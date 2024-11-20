@@ -2,9 +2,15 @@ package com.cooksys.twitter_api.services.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.cooksys.twitter_api.dtos.TweetResponseDto;
 import com.cooksys.twitter_api.services.TweetService;
 
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
 public class TweetServiceImpl implements TweetService {
 
 //	@Override
