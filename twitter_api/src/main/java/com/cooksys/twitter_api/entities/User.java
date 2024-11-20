@@ -2,6 +2,7 @@ package com.cooksys.twitter_api.entities;
 
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -17,30 +18,32 @@ public class User {
     @Id
     @GeneratedValue
     private long id;
-    private String username;
-    private String password;
 
     @GeneratedValue
     private Timestamp timestamp;
 
     private boolean deleted;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String phone;
 
     @ManyToMany
     @JoinTable(name="followers_following", joinColumns = @JoinColumn(name="followers_id"), inverseJoinColumns = @JoinColumn(name="following_id"))
-    private List<User> followers;
+    private List<User> followers = new ArrayList<>();
+    
+    @ManyToMany(mappedBy = "followers")
+    private List<User> following = new ArrayList<>();
     
     @OneToMany(mappedBy="author")
-    private List<Tweet> tweets; 
+    private List<Tweet> tweets = new ArrayList<>(); 
+    
+    @ManyToMany(mappedBy = "likes")
+    private List<Tweet> likes = new ArrayList<>();
+    
+    @ManyToMany(mappedBy = "mentionedUsers")
+    private List<Tweet> mentioned = new ArrayList<>();
     
     @Embedded
     private Credentials credentials; 
     
     @Embedded
     private Profile profile; 
-    
     
 }
