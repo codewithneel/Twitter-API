@@ -42,6 +42,10 @@ public class Tweet {
 	@Column(nullable=false)
 	private boolean deleted = false;
 	
+	public boolean getDeleted() {
+		return deleted;
+	}
+	
 	private String content; 
 	
 	//self referencing relationship
@@ -81,5 +85,8 @@ public class Tweet {
 	)
 	private List<Hashtag> hashtags = new ArrayList<>();
 	
-	
+	public List<Hashtag> getHashtags(){
+		return hashtags;
+	}
+		
 }
