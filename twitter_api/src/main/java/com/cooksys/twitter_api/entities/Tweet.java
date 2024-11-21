@@ -10,22 +10,19 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
 
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @NoArgsConstructor
 @Data
-public class Tweet {
+public class Tweet{
 	
 	@Id
 	@GeneratedValue

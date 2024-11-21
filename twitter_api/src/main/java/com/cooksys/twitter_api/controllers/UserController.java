@@ -6,8 +6,11 @@ import com.cooksys.twitter_api.dtos.UserRequestDto;
 import com.cooksys.twitter_api.dtos.UserResponseDto;
 import com.cooksys.twitter_api.entities.Tweet;
 import com.cooksys.twitter_api.entities.User;
+import com.cooksys.twitter_api.services.UserService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -17,6 +20,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
+	
+	private final UserService userService;
 
 //    @GetMapping("/@{username}/mentions}")
 //    public List<TweetRequestDto> retrieveUserMentions(@PathVariable String username) {
@@ -42,11 +47,11 @@ public class UserController {
 //        return followed;
 //    }
 //
-//    @GetMapping("/@{username}/tweets")
-//    public List<TweetResponseDto> retrieveAllTweets(@PathVariable String username){
-//        List<TweetResponseDto> allTweets = new ArrayList<>();
-//        return allTweets;
-//    }
+    @GetMapping("/@{username}/tweets")
+    public ResponseEntity<List<TweetResponseDto>> getAllTweetsCreatedByUser(@PathVariable String username){
+        return	userService.getAllTweetsCreatedByUser(username);
+        
+    }
 //
 //    @DeleteMapping("user/@{username}")
 //    public UserResponseDto deleteUser(@PathVariable String username){
@@ -54,11 +59,10 @@ public class UserController {
 //        return deletedUser;
 //    }
 //
-//    @GetMapping("users/@{username}/followers")
-//    public List<UserResponseDto> retrieveFollowers(@PathVariable String username){
-//        List<UserResponseDto> followers = new ArrayList<>();
-//        return followers;
-//    }
+    @GetMapping("/@{username}/followers")
+    public ResponseEntity<List<UserResponseDto>> getUserFollowers(@PathVariable String username){
+        return userService.getUserFollowers(username);
+    }
 
     // Needs to add Patch Users, Get Users Following and Get Users username
 
