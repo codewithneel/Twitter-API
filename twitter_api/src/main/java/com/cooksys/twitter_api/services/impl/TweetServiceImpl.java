@@ -8,10 +8,13 @@ import org.springframework.stereotype.Service;
 
 import com.cooksys.twitter_api.dtos.HashtagDto;
 import com.cooksys.twitter_api.dtos.TweetResponseDto;
+import com.cooksys.twitter_api.dtos.UserResponseDto;
 import com.cooksys.twitter_api.entities.Tweet;
+import com.cooksys.twitter_api.entities.User;
 import com.cooksys.twitter_api.exceptions.NotFoundException;
 import com.cooksys.twitter_api.mappers.HashtagMapper;
 import com.cooksys.twitter_api.mappers.TweetMapper;
+import com.cooksys.twitter_api.mappers.UserMapper;
 import com.cooksys.twitter_api.repositories.TweetRepository;
 import com.cooksys.twitter_api.services.TweetService;
 
@@ -24,13 +27,14 @@ public class TweetServiceImpl implements TweetService {
 	private final TweetRepository tweetRepository;
 	private final TweetMapper tweetMapper;
 	private final HashtagMapper hashtagMapper;
+	private final UserMapper userMapper; 
 
 	@Override
 	public List<TweetResponseDto> getAllTweets() {
 		List<TweetResponseDto> ret = new ArrayList<>(); 
 		List<Tweet> checkDeleted = tweetRepository.findAll();
 		for(Tweet t : checkDeleted) {
-			if(t.getDeleted() == false) {
+			if(t.isDeleted() == false) {
 				ret.add(tweetMapper.entityToDto(t));
 			}
 		}
@@ -49,7 +53,7 @@ public class TweetServiceImpl implements TweetService {
 			throw new NotFoundException();//"Tweet does not exist");
 		}
 		Tweet ret = tweetRepository.findById(id).get();
-		if(ret.getDeleted() == true) {
+		if(ret.isDeleted() == true) {
 			throw new NotFoundException();//"Tweet has been deleted");
 		}
 		return tweetMapper.entityToDto(ret);
@@ -85,10 +89,10 @@ public class TweetServiceImpl implements TweetService {
 			throw new NotFoundException();//"Tweet does not exist");
 		}
 		Tweet tempTweet = tweetRepository.findById(id).get();
-		if(tempTweet.getDeleted() == true) {
+		if(tempTweet.isDeleted() == true) {
 			throw new NotFoundException();//"Tweet has been deleted");
 		}
-		List<HashtagDto> ret = hashtagMapper.entitiesToDto(tempTweet.getHashtags());
+		List<HashtagDto> ret = hashtagMapper.entitiesToDtos(tempTweet.getHashtags());
 		return ret;
 	}
 //
@@ -116,10 +120,30 @@ public class TweetServiceImpl implements TweetService {
 //		return null;
 //	}
 //
-//	@Override
-//	public List<UserResponseDto> getUsersMentionedInTweet(Long id) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
+	@Override
+	public List<UserResponseDto> getUsersMentionedInTweet(Long id) {
+		/*
+		 * Validate tweet - 
+		 * 1. Does the tweet exist? 
+		 * 2. Is it a non-deleted tweet?
+		 * */
+		Optional<Tweet> tweet = tweetRepository.findById(id);
+		if(tweet.isEmpty() || tweet.get().isDeleted()) {
+			throw new NotFoundException(); //id is not valid
+		}
+		
+		/*
+		 * Fetch mentioned users in tweet 
+		 * Iterate through list and add non-deleted mentioned users to result
+		 * */
+		List<UserResponseDto> res = new ArrayList<>();
+		for(User mentionedUser: tweet.get().getMentionedUsers()) {
+			if(!mentionedUser.isDeleted()) {
+				res.add(userMapper.entityToDto(mentionedUser));
+			}
+		}
+	
+		return res;
+	}
 
 }

@@ -39,7 +39,7 @@ public class Tweet{
 	@Column(nullable=false)
 	private boolean deleted = false;
 	
-	public boolean getDeleted() {
+	public boolean isDeleted() {
 		return deleted;
 	}
 	

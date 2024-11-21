@@ -27,15 +27,15 @@ public class User {
 
     private boolean deleted;
 
-    @ManyToMany(mappedBy = "following")
-    private List<User> followers = new ArrayList<>();
-    
     @ManyToMany
-	@JoinTable(
+    @JoinTable(
 			name = "follower_following", 
 			joinColumns = @JoinColumn(name = "following_id"),
 			inverseJoinColumns = @JoinColumn(name = "follower_id")
 	)
+    private List<User> followers = new ArrayList<>();
+    
+    @ManyToMany(mappedBy = "followers")
     private List<User> following = new ArrayList<>();
     
     @OneToMany(mappedBy="author")
