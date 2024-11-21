@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cooksys.twitter_api.dtos.HashtagDto;
 import com.cooksys.twitter_api.dtos.TweetResponseDto;
 import com.cooksys.twitter_api.services.TweetService;
 
@@ -20,22 +21,22 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TweetController {
 	
-	TweetService tweetService; 
+	private final TweetService tweetService; 
 	
-//	@GetMapping
-//	public List<TweetResponseDto> getAllTweets(){
-//		return tweetService.getAllTweets();
-//	}
+	@GetMapping
+	public List<TweetResponseDto> getAllTweets(){
+		return tweetService.getAllTweets();
+	}
 //	
 //	@PostMapping
 //	public TweetResponseDto createSimpleTweet(@RequestBody TweetRequestDto tweetRequestDto) {
 //		return tweetService.createSimpleTweet(tweetRequestDto);
 //	}
 //	
-//	@GetMapping("/{id}")
-//	public TweetResponseDto getTweet(@PathVariable Long id) {
-//		return tweetService.getTweet(id); 
-//	}
+	@GetMapping("/{id}")
+	public TweetResponseDto getTweet(@PathVariable Long id) {
+		return tweetService.getTweet(id); 
+	}
 //	
 //	@DeleteMapping("/{id}")
 //	public TweetResponseDto deleteTweet(@PathVariable Long id, @RequestBody CredentialsDto credentialsDto) {
@@ -57,10 +58,10 @@ public class TweetController {
 //		return tweetService.repostTweet(id, credentialsDto);
 //	}
 //	
-//	@GetMapping("/{id}/tags")
-//	public List<HashtagDto> getHashtagsAssociatedWithTweet(@PathVariable Long id){
-//		return tweetService.getHashtagsAssociatedWtihTweet(id);
-//	}
+	@GetMapping("/{id}/tags")
+	public List<HashtagDto> getHashtagsAssociatedWithTweet(@PathVariable Long id){
+		return tweetService.getHashtagsAssociatedWtihTweet(id);
+	}
 //	
 //	@GetMapping("/{id}/likes")
 //	public List<UserResponseDto> getUsersWhoLikedTweet(@PathVariable Long id){
