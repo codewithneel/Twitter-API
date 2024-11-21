@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cooksys.twitter_api.dtos.CredentialsDto;
 import com.cooksys.twitter_api.dtos.HashtagDto;
 import com.cooksys.twitter_api.dtos.TweetResponseDto;
+import com.cooksys.twitter_api.dtos.UserResponseDto;
 import com.cooksys.twitter_api.services.TweetService;
 
 import lombok.RequiredArgsConstructor;
@@ -38,15 +40,15 @@ public class TweetController {
 		return tweetService.getTweet(id); 
 	}
 //	
-//	@DeleteMapping("/{id}")
-//	public TweetResponseDto deleteTweet(@PathVariable Long id, @RequestBody CredentialsDto credentialsDto) {
-//		return tweetService.deleteTweet(id, credentialsDto);
-//	}
+	@DeleteMapping("/{id}")
+	public TweetResponseDto deleteTweet(@PathVariable Long id, @RequestBody CredentialsDto credentialsDto) {
+		return tweetService.deleteTweet(id, credentialsDto);
+	}
 //	
-//	@PostMapping("/{id}/like")
-//	public void likeTweet(@PathVariable Long id, @RequestBody CredentialsDto credentialsDto) {
-//		tweetService.likeTweet(id, credentialsDto); 
-//	}
+	@PostMapping("/{id}/like")
+	public void likeTweet(@PathVariable Long id, @RequestBody CredentialsDto credentialsDto) {
+		tweetService.likeTweet(id, credentialsDto); 
+	}
 //	
 //	@PostMapping("/{id}/reply")
 //	public TweetResponseDto replyToTweet(@PathVariable Long id, @RequestBody CredentialsDto credentialsDto) {
@@ -63,10 +65,10 @@ public class TweetController {
 		return tweetService.getHashtagsAssociatedWtihTweet(id);
 	}
 //	
-//	@GetMapping("/{id}/likes")
-//	public List<UserResponseDto> getUsersWhoLikedTweet(@PathVariable Long id){
-//		return tweetService.getUsersWhoLikedTweet(id);
-//	}
+	@GetMapping("/{id}/likes")
+	public List<UserResponseDto> getUsersWhoLikedTweet(@PathVariable Long id){
+		return tweetService.getUsersWhoLikedTweet(id);
+	}
 //	
 //	GetMapping("/{id}/context")
 //	public ContextDto getContextOfTweet(@PathVariable Long id) {

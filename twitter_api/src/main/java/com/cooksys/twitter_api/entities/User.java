@@ -26,16 +26,24 @@ public class User {
     private Timestamp timestamp;
 
     private boolean deleted;
-
-    @ManyToMany(mappedBy = "following")
-    private List<User> followers = new ArrayList<>();
     
+    public void delete() {
+    	deleted = true;
+    }
+    
+    public boolean isDeleted() {
+    	return deleted;
+    }
+
     @ManyToMany
 	@JoinTable(
 			name = "follower_following", 
 			joinColumns = @JoinColumn(name = "following_id"),
 			inverseJoinColumns = @JoinColumn(name = "follower_id")
 	)
+    private List<User> followers = new ArrayList<>();
+    
+    @ManyToMany(mappedBy = "followers")
     private List<User> following = new ArrayList<>();
     
     @OneToMany(mappedBy="author")
@@ -44,11 +52,19 @@ public class User {
     @ManyToMany(mappedBy = "tlikes")
     private List<Tweet> likes = new ArrayList<>();
     
+    public void addLike(Tweet post) {
+    	likes.add(post);
+    }
+    
     @ManyToMany(mappedBy = "mentionedUsers")
     private List<Tweet> mentioned = new ArrayList<>();
     
     @Embedded
     private Credentials credentials; 
+    
+    public Credentials getCredentials() {
+    	return credentials;
+    }
     
     @Embedded
     private Profile profile; 

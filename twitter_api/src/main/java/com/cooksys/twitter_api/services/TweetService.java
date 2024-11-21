@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.cooksys.twitter_api.dtos.CredentialsDto;
 import com.cooksys.twitter_api.dtos.HashtagDto;
 import com.cooksys.twitter_api.dtos.TweetResponseDto;
+import com.cooksys.twitter_api.dtos.UserResponseDto;
 
 public interface TweetService {
 	
@@ -16,9 +18,9 @@ public interface TweetService {
 //
 	public TweetResponseDto getTweet(Long id);
 //	
-//	public TweetResponseDto deleteTweet(Long id, CredentialsDto credentialsDto);
+	public TweetResponseDto deleteTweet(Long id, CredentialsDto credentialsDto);
 //	
-//	public void likeTweet(Long id, CredentialsDto credentialsDto);
+	public void likeTweet(Long id, CredentialsDto credentialsDto);
 //	
 //	public TweetResponseDto replyToTweet(Long id, CredentialsDto credentialsDto);
 //	
@@ -26,7 +28,7 @@ public interface TweetService {
 //
 	public List<HashtagDto> getHashtagsAssociatedWtihTweet(Long id);
 //
-//	public List<UserResponseDto> getUsersWhoLikedTweet(Long id);
+	public List<UserResponseDto> getUsersWhoLikedTweet(Long id);
 //	
 //	public ContextDto getContextOfTweet(Long id);
 //
