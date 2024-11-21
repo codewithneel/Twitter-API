@@ -32,6 +32,10 @@ public class Tweet{
 	@JoinColumn(nullable=false)
 	private User author;
 	
+	public User getAuthor() {
+		return author;
+	}
+	
 	@Column(nullable=false)
 	@CreationTimestamp
 	private Timestamp posted; 
@@ -39,6 +43,10 @@ public class Tweet{
 	@Column(nullable=false)
 	private boolean deleted = false;
 	
+	public void delete() {
+		deleted = true;
+	}
+  
 	public boolean isDeleted() {
 		return deleted;
 	}
@@ -65,6 +73,14 @@ public class Tweet{
 		inverseJoinColumns = @JoinColumn(name = "user_id")
 	)
 	private List<User> tlikes = new ArrayList<>();
+	
+	public List<User> getLikers(){
+		return tlikes;
+	}
+	
+	public void likedBy(User likedby) {
+		tlikes.add(likedby);
+	}
 	
 	@ManyToMany
 	@JoinTable(

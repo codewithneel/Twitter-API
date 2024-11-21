@@ -26,6 +26,14 @@ public class User {
     private Timestamp timestamp;
 
     private boolean deleted;
+    
+    public void delete() {
+    	deleted = true;
+    }
+    
+    public boolean isDeleted() {
+    	return deleted;
+    }
 
     @ManyToMany
     @JoinTable(
@@ -44,11 +52,19 @@ public class User {
     @ManyToMany(mappedBy = "tlikes")
     private List<Tweet> likes = new ArrayList<>();
     
+    public void addLike(Tweet post) {
+    	likes.add(post);
+    }
+    
     @ManyToMany(mappedBy = "mentionedUsers")
     private List<Tweet> mentioned = new ArrayList<>();
     
     @Embedded
     private Credentials credentials; 
+    
+    public Credentials getCredentials() {
+    	return credentials;
+    }
     
     @Embedded
     private Profile profile; 
