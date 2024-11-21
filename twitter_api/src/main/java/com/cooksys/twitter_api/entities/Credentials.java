@@ -2,7 +2,6 @@ package com.cooksys.twitter_api.entities;
 
 
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.Embedded;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
