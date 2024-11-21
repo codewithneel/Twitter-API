@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cooksys.twitter_api.dtos.HashtagDto;
 import com.cooksys.twitter_api.dtos.TweetResponseDto;
+import com.cooksys.twitter_api.dtos.UserResponseDto;
 import com.cooksys.twitter_api.services.TweetService;
 
 import lombok.RequiredArgsConstructor;
@@ -68,23 +69,23 @@ public class TweetController {
 //		return tweetService.getUsersWhoLikedTweet(id);
 //	}
 //	
-//	GetMapping("/{id}/context")
+//	@GetMapping("/{id}/context")
 //	public ContextDto getContextOfTweet(@PathVariable Long id) {
 //		return tweetService.getContextOfTweet(id);
 //	}
 //	
-//	GetMapping("/{id}/replies")
+//	@GetMapping("/{id}/replies")
 //	public List<TweetResponseDto> getDirectRepliesToTweet(@PathVariable Long id){
 //		return tweetService.getDirectRepliesToTweet(id);
 //	}
 //	
-//	GetMapping("/{id}/reposts")
+//	@GetMapping("/{id}/reposts")
 //	public List<TweetResponseDto> getDirectRepostsOfTweet(@PathVariable Long id){
 //		return tweetService.getDirectRepostsOfTweet(id);
 //	}
 //	
-//	GetMapping("/{id}/mentions")
-//	public List<UserResponseDto> getUsersMentionedInTweet(@PathVariable Long id){
-//		return tweetService.getUsersMentionedInTweet(id);
-//	}
+	@GetMapping("/{id}/mentions")
+	public List<UserResponseDto> getUsersMentionedInTweet(@PathVariable Long id){
+		return tweetService.getUsersMentionedInTweet(id);
+	}
 }

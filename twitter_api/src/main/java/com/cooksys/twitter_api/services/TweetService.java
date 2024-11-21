@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.cooksys.twitter_api.dtos.HashtagDto;
 import com.cooksys.twitter_api.dtos.TweetResponseDto;
+import com.cooksys.twitter_api.dtos.UserResponseDto;
 
 public interface TweetService {
 	
@@ -34,5 +35,5 @@ public interface TweetService {
 //
 //	public List<TweetResponseDto> getDirectRepostsOfTweet(Long id);
 //
-//	public List<UserResponseDto> getUsersMentionedInTweet(Long id);
+	public List<UserResponseDto> getUsersMentionedInTweet(Long id);
 }

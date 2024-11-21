@@ -1,4 +1,5 @@
 package com.cooksys.twitter_api.services;
+import com.cooksys.twitter_api.dtos.CredentialsDto;
 import com.cooksys.twitter_api.dtos.TweetResponseDto;
 import com.cooksys.twitter_api.dtos.UserResponseDto;
 
@@ -15,6 +16,10 @@ public interface UserService {
 	public ResponseEntity<List<TweetResponseDto>> getAllTweetsCreatedByUser(String username);
 
 	public ResponseEntity<List<UserResponseDto>> getUserFollowers(String username);
+
+	public UserResponseDto getUserByUsername(String username);
+
+	public UserResponseDto deleteUser(String username, CredentialsDto credentialsDto);
 
 
 }
