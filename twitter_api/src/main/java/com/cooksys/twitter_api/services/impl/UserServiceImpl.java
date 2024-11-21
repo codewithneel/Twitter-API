@@ -1,8 +1,11 @@
 package com.cooksys.twitter_api.services.impl;
 
+import com.cooksys.twitter_api.dtos.CredentialsDto;
 import com.cooksys.twitter_api.dtos.TweetResponseDto;
 import com.cooksys.twitter_api.dtos.UserResponseDto;
 import com.cooksys.twitter_api.entities.*;
+import com.cooksys.twitter_api.exceptions.NotAuthorizedException;
+import com.cooksys.twitter_api.exceptions.NotFoundException;
 import com.cooksys.twitter_api.mappers.TweetMapper;
 import com.cooksys.twitter_api.mappers.UserMapper;
 import com.cooksys.twitter_api.repositories.TweetRepository;
@@ -87,9 +90,34 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
+
+	@Override
+	public UserResponseDto getUserByUsername(String username) {
+		Optional<User> user = userRepository.findByCredentialsUsername(username);
+		if(user.isEmpty() || user.get().isDeleted()) {
+			throw new NotFoundException();
+		}
 		
+		return userMapper.entityToDto(user.get());
+	}
+
+
+	@Override
+	public UserResponseDto deleteUser(String username, CredentialsDto credentialsDto) {
+		Optional<User> user = userRepository.findByCredentialsUsername(username);
+		if(user.isEmpty() || user.get().isDeleted()) {
+			throw new NotFoundException();
+		}
 		
-		
+		if(user.get().getCredentials().getUsername().equals(credentialsDto.getUsername()) && 
+				user.get().getCredentials().getPassword().equals(credentialsDto.getPassword())) {
+			user.get().setDeleted(true);
+			return userMapper.entityToDto(userRepository.saveAndFlush(user.get()));		
+		}else {
+			throw new NotAuthorizedException();
+		}
 	}
 
 //    @Override

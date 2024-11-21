@@ -36,5 +36,5 @@ public interface TweetService {
 //
 //	public List<TweetResponseDto> getDirectRepostsOfTweet(Long id);
 //
-//	public List<UserResponseDto> getUsersMentionedInTweet(Long id);
+	public List<UserResponseDto> getUsersMentionedInTweet(Long id);
 }

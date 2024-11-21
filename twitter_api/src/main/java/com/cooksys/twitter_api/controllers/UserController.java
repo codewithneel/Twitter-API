@@ -1,5 +1,6 @@
 package com.cooksys.twitter_api.controllers;
 
+import com.cooksys.twitter_api.dtos.CredentialsDto;
 import com.cooksys.twitter_api.dtos.TweetRequestDto;
 import com.cooksys.twitter_api.dtos.TweetResponseDto;
 import com.cooksys.twitter_api.dtos.UserRequestDto;
@@ -52,19 +53,22 @@ public class UserController {
         return	userService.getAllTweetsCreatedByUser(username);
         
     }
-//
-//    @DeleteMapping("user/@{username}")
-//    public UserResponseDto deleteUser(@PathVariable String username){
-//        UserResponseDto deletedUser = new UserResponseDto();
-//        return deletedUser;
-//    }
-//
+
+    @DeleteMapping("/@{username}")
+    public UserResponseDto deleteUser(@PathVariable String username, @RequestBody CredentialsDto credentialsDto){
+        return userService.deleteUser(username, credentialsDto);
+    }
+
     @GetMapping("/@{username}/followers")
     public ResponseEntity<List<UserResponseDto>> getUserFollowers(@PathVariable String username){
         return userService.getUserFollowers(username);
     }
 
-    // Needs to add Patch Users, Get Users Following and Get Users username
+    @GetMapping("/@{username}")
+    public UserResponseDto getUserByUsername(@PathVariable String username) {
+    	return userService.getUserByUsername(username);
+    }
+    
 
 
 }

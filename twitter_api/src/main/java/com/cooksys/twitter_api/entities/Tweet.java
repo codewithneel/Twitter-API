@@ -46,7 +46,7 @@ public class Tweet{
 	public void delete() {
 		deleted = true;
 	}
-	
+  
 	public boolean isDeleted() {
 		return deleted;
 	}
