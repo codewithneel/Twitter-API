@@ -74,6 +74,13 @@ public class UserController {
     	return userService.createUser(userRequestDto);
     }
     
+    @GetMapping
+    public List<UserResponseDto> getUsers() {
+    	return userService.getUsers();
+    }
 
-
+    @PatchMapping("/@{username}")
+    public UserResponseDto changeUsername(@RequestBody UserRequestDto userRequestDto, @PathVariable String username) {
+    	return userService.changeUsername(userRequestDto, username);
+    }
 }

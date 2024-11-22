@@ -21,5 +21,4 @@ public interface TweetMapper {
 	
 	public List<TweetResponseDto> entitiesToDtos(List<Tweet> tweets);
 	
-	public Credentials dtoToEntityCred(CredentialsDto credentialsDto);
 }

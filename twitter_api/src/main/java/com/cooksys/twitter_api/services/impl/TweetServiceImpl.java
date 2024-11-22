@@ -76,6 +76,7 @@ public class TweetServiceImpl implements TweetService {
 		}
 		
 		Tweet ret = tweetMapper.dtoToEntity(tweetRequestDto);
+		if(ret.getContent() == null) throw new BadRequestException("No content provided!");
 		ret.setAuthor(tweeter);
 		
 		//get the content and split it to go through and check for hashtags and mentions

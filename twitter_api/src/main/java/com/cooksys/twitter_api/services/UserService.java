@@ -13,7 +13,7 @@ public interface UserService {
 
 //    List<ProfileDto> getProfiles();
 //
-//    List<User> getUsers();
+    public List<UserResponseDto> getUsers();
 
 	public ResponseEntity<List<TweetResponseDto>> getAllTweetsCreatedByUser(String username);
 
@@ -27,5 +27,5 @@ public interface UserService {
 
 	public void followUser(String username, CredentialsDto credentialsDto);
 
-
+	public UserResponseDto changeUsername(UserRequestDto userRequestDto, String username);
 }
