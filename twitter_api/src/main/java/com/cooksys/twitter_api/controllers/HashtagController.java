@@ -4,11 +4,14 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cooksys.twitter_api.dtos.HashtagDto;
+import com.cooksys.twitter_api.dtos.TweetResponseDto;
 import com.cooksys.twitter_api.services.HashtagService;
+
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,4 +27,8 @@ public class HashtagController {
 		return hashtagService.getAllTags();
 	}
 	
+	@GetMapping("/{label}")
+	public List<TweetResponseDto> getTweetsFromTag(@PathVariable String label){
+		return hashtagService.getTweetsFromTag(label);
+	}
 }

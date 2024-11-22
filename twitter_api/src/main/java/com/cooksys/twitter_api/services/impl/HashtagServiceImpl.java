@@ -7,7 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.cooksys.twitter_api.dtos.HashtagDto;
+import com.cooksys.twitter_api.dtos.TweetResponseDto;
+import com.cooksys.twitter_api.entities.Hashtag;
+import com.cooksys.twitter_api.exceptions.NotFoundException;
 import com.cooksys.twitter_api.mappers.HashtagMapper;
+import com.cooksys.twitter_api.mappers.TweetMapper;
 import com.cooksys.twitter_api.repositories.HashtagRepository;
 import com.cooksys.twitter_api.services.HashtagService;
 
@@ -19,9 +23,29 @@ public class HashtagServiceImpl implements HashtagService {
 	
 	private final HashtagRepository hashtagRepository;
 	private final HashtagMapper hashtagMapper;
+	private final TweetMapper tweetMapper;
 	
 	@Override
 	public ResponseEntity<List<HashtagDto>> getAllTags() {
 		return new ResponseEntity<>(hashtagMapper.entitiesToDtos(hashtagRepository.findAll()), HttpStatus.OK);
+	}
+
+	@Override
+	public List<TweetResponseDto> getTweetsFromTag(String label){
+		List<Hashtag> allTags = hashtagRepository.findAll();
+		Hashtag tagForTweets = new Hashtag();
+		boolean isTag = false;
+		for(Hashtag h : allTags) {
+			if(h.getLabel().equals(label)) {
+				tagForTweets = h;
+				isTag = true;
+			}
+		}
+		if(!isTag) {
+			throw new NotFoundException("no hashtag with that label exists");
+		}
+		
+		List<TweetResponseDto> ret = tweetMapper.entitiesToDtos(tagForTweets.getTweets());
+		return ret;
 	}
 }

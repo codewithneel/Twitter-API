@@ -195,8 +195,31 @@ public class UserServiceImpl implements UserService {
 //
 //
 //
-//    @Override
-//    public List<User> getUsers() {
-//        return null;
-//    }
+    @Override
+    public List<UserResponseDto> getUsers() {
+        List<User> allUsers = userRepository.findAll(); 
+        List<User> activeUsers = new ArrayList<>();
+        for(User u : allUsers) {
+        	if(!u.isDeleted()) {
+        		activeUsers.add(u);
+        	}
+        }
+        return userMapper.entitiesToDtos(activeUsers);
+    }
+    
+   @Override
+   public UserResponseDto changeUsername(UserRequestDto userRequestDto, String username) {
+	   User userToChange = userMapper.DtoToEntity(userRequestDto);
+	   Credentials userCreds = credentialsMapper.DtoToEntityCred(userRequestDto.getCredentials());
+	   Profile userProf = profileMapper.ProfDtoToEnt(userRequestDto.getProfile());
+	   if(!userRepository.existsByCredentialsUsername(userCreds.getUsername()) || userCreds == null || userProf == null || userCreds.getUsername() == null 
+			   || userCreds.getPassword() == null || !userRepository.findByCredentialsUsername(userCreds.getUsername()).get().getCredentials().getPassword().equals(userCreds.getPassword()) 
+			   || !userRepository.findByCredentialsUsername(userCreds.getUsername()).get().getCredentials().getUsername().equals(userCreds.getUsername())) {
+		   
+		   throw new BadRequestException("incorrect username/password");
+	   }
+	   userToChange.getCredentials().setUsername(username);
+	   userRepository.save(userToChange);
+	   return userMapper.entityToDto(userToChange);
+   }
 }
