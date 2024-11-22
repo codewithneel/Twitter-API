@@ -1,11 +1,16 @@
 package com.cooksys.twitter_api.services.impl;
 
 import com.cooksys.twitter_api.dtos.CredentialsDto;
+import com.cooksys.twitter_api.dtos.ProfileDto;
 import com.cooksys.twitter_api.dtos.TweetResponseDto;
+import com.cooksys.twitter_api.dtos.UserRequestDto;
 import com.cooksys.twitter_api.dtos.UserResponseDto;
 import com.cooksys.twitter_api.entities.*;
+import com.cooksys.twitter_api.exceptions.BadRequestException;
 import com.cooksys.twitter_api.exceptions.NotAuthorizedException;
 import com.cooksys.twitter_api.exceptions.NotFoundException;
+import com.cooksys.twitter_api.mappers.CredentialsMapper;
+import com.cooksys.twitter_api.mappers.ProfileMapper;
 import com.cooksys.twitter_api.mappers.TweetMapper;
 import com.cooksys.twitter_api.mappers.UserMapper;
 import com.cooksys.twitter_api.repositories.TweetRepository;
@@ -17,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,6 +36,8 @@ public class UserServiceImpl implements UserService {
 	private final TweetRepository tweetRepository;
 	private final TweetMapper tweetMapper;
 	private final UserMapper userMapper;
+	private final CredentialsMapper credentialsMapper;
+	private final ProfileMapper profileMapper;
 	
 	@Override
 	public ResponseEntity<List<TweetResponseDto>> getAllTweetsCreatedByUser(String username) {
@@ -65,7 +73,6 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	
-	//Need to fix the followers/following table
 	@Override
 	public ResponseEntity<List<UserResponseDto>> getUserFollowers(String username) {
 		
@@ -118,6 +125,70 @@ public class UserServiceImpl implements UserService {
 		}else {
 			throw new NotAuthorizedException();
 		}
+	}
+
+
+	//*********** Joined date not set
+	@Override
+	public UserResponseDto createUser(UserRequestDto userRequestDto) {
+		
+		if(userRequestDto == null || userRequestDto.getCredentials() == null || userRequestDto.getProfile() == null ||
+				userRequestDto.getCredentials().getUsername() == null || userRequestDto.getCredentials().getPassword() == null
+				|| userRequestDto.getProfile().getFirstName() == null || userRequestDto.getProfile().getLastName() == null
+				|| userRequestDto.getProfile().getEmail() == null || userRequestDto.getProfile().getPhone() == null) {
+			throw new BadRequestException("Invalid Request");
+		}
+		//if username does not exist, create new user
+		Optional<User> user = userRepository.findByCredentialsUsername(userRequestDto.getCredentials().getUsername());
+		if(user.isEmpty()) {
+			User newUser = new User();
+			newUser.setDeleted(false);
+			//newUser.setJoined(new Timestamp(System.currentTimeMillis()));
+			newUser.setCredentials(credentialsMapper.DtoToEntityCred(userRequestDto.getCredentials()));
+			newUser.setProfile(profileMapper.ProfDtoToEnt(userRequestDto.getProfile()));
+			return userMapper.entityToDto(userRepository.saveAndFlush(newUser));
+		}
+		
+		/*
+		 * if the account is not active and the passwords match, re-activate account 
+		 * otherwise, throw error 
+		 */
+		if(user.get().isDeleted() && userRequestDto.getCredentials().getPassword().equals(user.get().getCredentials().getPassword())) {
+			user.get().setDeleted(false);
+			return userMapper.entityToDto(userRepository.saveAndFlush(user.get()));
+		}
+		
+		throw new BadRequestException("Invalid");
+	}
+
+
+	@Override
+	public void followUser(String username, CredentialsDto credentialsDto) {
+		if(credentialsDto == null || credentialsDto.getUsername() == null || credentialsDto.getPassword() == null) {
+			throw new BadRequestException("missing fields in credentials");
+		}
+		
+		Optional<User> user = userRepository.findByCredentialsUsername(credentialsDto.getUsername());
+		if(user.isEmpty() || user.get().isDeleted() || !user.get().getCredentials().getPassword().equals(credentialsDto.getPassword())) {
+			throw new BadRequestException("invalid credentials");
+		}
+		
+		Optional<User> followUser = userRepository.findByCredentialsUsername(username);
+		if(user.isEmpty() || user.get().isDeleted()){
+			throw new BadRequestException("cannot follow user -> user does not exist!");
+		}
+		
+		List<User> userFollowingList = user.get().getFollowing();
+		for(User followingUser : userFollowingList) {
+			if(followingUser.equals(followUser.get())) {
+				throw new BadRequestException("user already follows this account!!");
+			}
+		}
+		user.get().getFollowing().add(followUser.get());
+		followUser.get().getFollowers().add(user.get());
+		userRepository.saveAndFlush(user.get());
+		userRepository.saveAndFlush(followUser.get());
+		
 	}
 
 //    @Override

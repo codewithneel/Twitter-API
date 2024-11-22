@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.cooksys.twitter_api.dtos.ContextDto;
 import com.cooksys.twitter_api.dtos.CredentialsDto;
 import com.cooksys.twitter_api.dtos.HashtagDto;
 import com.cooksys.twitter_api.dtos.TweetResponseDto;
@@ -162,13 +163,16 @@ public class TweetServiceImpl implements TweetService {
 		List<UserResponseDto> ret = userMapper.entitiesToDtos(existingLikers);
 		return ret;
 	}
-//	
-//	@Override
-//	public ContextDto getContextOfTweet(Long id) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
+	
+	@Override
+	public ContextDto getContextOfTweet(Long id) {
+		Optional<Tweet> tweet = tweetRepository.findById(id);
+		if(tweet.isEmpty() || tweet.get().isDeleted()) {
+			throw new NotFoundException("tweet does not exist");
+		}
+		return new ContextDto();
+	}
+
 //	@Override
 //	public List<TweetResponseDto> getDirectRepliesToTweet(Long id) {
 //		// TODO Auto-generated method stub
