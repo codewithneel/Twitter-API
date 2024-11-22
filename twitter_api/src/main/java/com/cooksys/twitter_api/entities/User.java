@@ -59,6 +59,10 @@ public class User {
     @ManyToMany(mappedBy = "mentionedUsers")
     private List<Tweet> mentioned = new ArrayList<>();
     
+    public void addMentioned(Tweet mentionedTweet) {
+    	mentioned.add(mentionedTweet);
+    }
+    
     @Embedded
     private Credentials credentials; 
     

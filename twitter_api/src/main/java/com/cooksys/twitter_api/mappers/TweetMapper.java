@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
+import com.cooksys.twitter_api.dtos.CredentialsDto;
 import com.cooksys.twitter_api.dtos.TweetRequestDto;
 import com.cooksys.twitter_api.dtos.TweetResponseDto;
+import com.cooksys.twitter_api.entities.Credentials;
 import com.cooksys.twitter_api.entities.Tweet;
 import com.cooksys.twitter_api.entities.User;
 
@@ -18,4 +20,6 @@ public interface TweetMapper {
 	public TweetResponseDto entityToDto(Tweet tweet);
 	
 	public List<TweetResponseDto> entitiesToDtos(List<Tweet> tweets);
+	
+	public Credentials dtoToEntityCred(CredentialsDto credentialsDto);
 }

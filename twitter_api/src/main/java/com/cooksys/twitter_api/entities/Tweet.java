@@ -90,6 +90,10 @@ public class Tweet{
 	)
 	private List<User> mentionedUsers = new ArrayList<>();
 	
+	public void addMentioned(User mentionedUser) {
+		mentionedUsers.add(mentionedUser);
+	}
+	
 	@ManyToMany
 	@JoinTable(
 		name = "tweet_hashtags", 
@@ -97,6 +101,10 @@ public class Tweet{
 		inverseJoinColumns = @JoinColumn(name = "user_id")
 	)
 	private List<Hashtag> hashtags = new ArrayList<>();
+	
+	public void addTag(Hashtag hashtag) {
+		hashtags.add(hashtag);
+	}
 	
 	public List<Hashtag> getHashtags(){
 		return hashtags;

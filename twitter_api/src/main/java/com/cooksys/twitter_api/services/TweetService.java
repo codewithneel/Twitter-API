@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.cooksys.twitter_api.dtos.ContextDto;
 import com.cooksys.twitter_api.dtos.CredentialsDto;
 import com.cooksys.twitter_api.dtos.HashtagDto;
+import com.cooksys.twitter_api.dtos.TweetRequestDto;
 import com.cooksys.twitter_api.dtos.TweetResponseDto;
 import com.cooksys.twitter_api.dtos.UserResponseDto;
 
@@ -15,7 +16,7 @@ public interface TweetService {
 	
 	public List<TweetResponseDto> getAllTweets();
 //	
-//	public TweetResponseDto createSimpleTweet(TweetRequestDto tweetRequestDto);
+	public TweetResponseDto createSimpleTweet(TweetRequestDto tweetRequestDto);
 //
 	public TweetResponseDto getTweet(Long id);
 //	
