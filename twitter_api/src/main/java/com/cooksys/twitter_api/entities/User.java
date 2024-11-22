@@ -23,7 +23,7 @@ public class User {
     private long id;
     
     @CreationTimestamp
-    private Timestamp timestamp;
+    private Timestamp joined;
 
     private boolean deleted;
     

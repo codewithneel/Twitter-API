@@ -1,6 +1,7 @@
 package com.cooksys.twitter_api.controllers;
 
 import com.cooksys.twitter_api.dtos.CredentialsDto;
+import com.cooksys.twitter_api.dtos.ProfileDto;
 import com.cooksys.twitter_api.dtos.TweetRequestDto;
 import com.cooksys.twitter_api.dtos.TweetResponseDto;
 import com.cooksys.twitter_api.dtos.UserRequestDto;
@@ -42,12 +43,11 @@ public class UserController {
 //        return fullFeed;
 //    }
 //
-//    @PostMapping("/@{username}/follow")
-//    public UserResponseDto followUser(@PathVariable String username){
-//        UserResponseDto followed = new UserResponseDto();
-//        return followed;
-//    }
-//
+    @PostMapping("/@{username}/follow")
+    public void followUser(@PathVariable String username, @RequestBody CredentialsDto credentialsDto){
+        userService.followUser(username, credentialsDto);
+    }
+
     @GetMapping("/@{username}/tweets")
     public ResponseEntity<List<TweetResponseDto>> getAllTweetsCreatedByUser(@PathVariable String username){
         return	userService.getAllTweetsCreatedByUser(username);
@@ -67,6 +67,11 @@ public class UserController {
     @GetMapping("/@{username}")
     public UserResponseDto getUserByUsername(@PathVariable String username) {
     	return userService.getUserByUsername(username);
+    }
+    
+    @PostMapping
+    public UserResponseDto createUser(@RequestBody UserRequestDto userRequestDto) {
+    	return userService.createUser(userRequestDto);
     }
     
 

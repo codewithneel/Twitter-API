@@ -1,6 +1,8 @@
 package com.cooksys.twitter_api.services;
 import com.cooksys.twitter_api.dtos.CredentialsDto;
+import com.cooksys.twitter_api.dtos.ProfileDto;
 import com.cooksys.twitter_api.dtos.TweetResponseDto;
+import com.cooksys.twitter_api.dtos.UserRequestDto;
 import com.cooksys.twitter_api.dtos.UserResponseDto;
 
 import java.util.List;
@@ -20,6 +22,10 @@ public interface UserService {
 	public UserResponseDto getUserByUsername(String username);
 
 	public UserResponseDto deleteUser(String username, CredentialsDto credentialsDto);
+
+	public UserResponseDto createUser(UserRequestDto userRequestDto);
+
+	public void followUser(String username, CredentialsDto credentialsDto);
 
 
 }
