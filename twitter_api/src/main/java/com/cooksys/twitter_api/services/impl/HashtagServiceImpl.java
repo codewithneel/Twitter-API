@@ -24,6 +24,4 @@ public class HashtagServiceImpl implements HashtagService {
 	public ResponseEntity<List<HashtagDto>> getAllTags() {
 		return new ResponseEntity<>(hashtagMapper.entitiesToDtos(hashtagRepository.findAll()), HttpStatus.OK);
 	}
-
-	
 }
