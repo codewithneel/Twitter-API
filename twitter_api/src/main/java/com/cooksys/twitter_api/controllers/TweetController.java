@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cooksys.twitter_api.dtos.ContextDto;
 import com.cooksys.twitter_api.dtos.CredentialsDto;
 import com.cooksys.twitter_api.dtos.HashtagDto;
+import com.cooksys.twitter_api.dtos.TweetRequestDto;
 import com.cooksys.twitter_api.dtos.TweetResponseDto;
 import com.cooksys.twitter_api.dtos.UserResponseDto;
 import com.cooksys.twitter_api.services.TweetService;
@@ -31,10 +32,10 @@ public class TweetController {
 		return tweetService.getAllTweets();
 	}
 //	
-//	@PostMapping
-//	public TweetResponseDto createSimpleTweet(@RequestBody TweetRequestDto tweetRequestDto) {
-//		return tweetService.createSimpleTweet(tweetRequestDto);
-//	}
+	@PostMapping
+	public TweetResponseDto createSimpleTweet(@RequestBody TweetRequestDto tweetRequestDto) {
+		return tweetService.createSimpleTweet(tweetRequestDto);
+	}
 //	
 	@GetMapping("/{id}")
 	public TweetResponseDto getTweet(@PathVariable Long id) {
