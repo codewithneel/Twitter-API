@@ -25,7 +25,7 @@ public class UserController {
 	
 	private final UserService userService;
 
-//    @GetMapping("/@{username}/mentions}")
+//    @GetMapping("/@{username}/mentions")
 //    public List<TweetRequestDto> retrieveUserMentions(@PathVariable String username) {
 //        List<TweetRequestDto> tweets = new ArrayList<>();
 //        return tweets;
@@ -37,7 +37,7 @@ public class UserController {
 //        return unfollowed;
 //    }
 //
-//    @GetMapping("/@{username}/feed}")
+//    @GetMapping("/@{username}/feed")
 //    public List<TweetResponseDto> retrieveFeed(@PathVariable String username) {
 //        List<TweetResponseDto> fullFeed = new ArrayList<>();
 //        return fullFeed;

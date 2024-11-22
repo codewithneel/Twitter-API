@@ -24,9 +24,9 @@ public interface TweetService {
 	public void likeTweet(Long id, CredentialsDto credentialsDto);
 //	
 //	public TweetResponseDto replyToTweet(Long id, CredentialsDto credentialsDto);
-//	
-//	public TweetResponseDto repostTweet(Long id, CredentialsDto credentialsDto);
-//
+	
+	public TweetResponseDto repostTweet(Long id, CredentialsDto credentialsDto);
+
 	public List<HashtagDto> getHashtagsAssociatedWtihTweet(Long id);
 //
 	public List<UserResponseDto> getUsersWhoLikedTweet(Long id);

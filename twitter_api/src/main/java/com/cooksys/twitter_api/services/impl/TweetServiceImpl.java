@@ -124,13 +124,29 @@ public class TweetServiceImpl implements TweetService {
 //		// TODO Auto-generated method stub
 //		return null;
 //	}
-//
-//	@Override
-//	public TweetResponseDto repostTweet(Long id, CredentialsDto credentialsDto) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
+
+	@Override
+	public TweetResponseDto repostTweet(Long id, CredentialsDto credentialsDto) {
+		if(credentialsDto.getUsername() == null || credentialsDto.getPassword() == null) {
+			throw new BadRequestException("Missing fields in request");
+		}
+		Optional<User> user = userRepository.findByCredentialsUsername(credentialsDto.getUsername());
+		if(user.isEmpty() || user.get().isDeleted() || !credentialsDto.getPassword().equals(user.get().getCredentials().getPassword())) {
+			throw new NotFoundException("Invalid credentials -> No user found");
+		}
+		Optional<Tweet> tweet = tweetRepository.findById(id);
+		if(tweet.isEmpty() || tweet.get().isDeleted()) {
+			throw new NotFoundException("Invalid tweet id -> tweet does not exist");
+		}
+		Tweet ret = new Tweet();
+		ret.setAuthor(user.get());
+		ret.setContent(null);
+		ret.setDeleted(false);
+		ret.setRepostOf(tweet.get());
+		
+		return tweetMapper.entityToDto(tweetRepository.saveAndFlush(ret));
+	}
+
 	@Override
 	public List<HashtagDto> getHashtagsAssociatedWtihTweet(Long id) {
 		if(tweetRepository.findById(id).get() == null) {
@@ -170,7 +186,11 @@ public class TweetServiceImpl implements TweetService {
 		if(tweet.isEmpty() || tweet.get().isDeleted()) {
 			throw new NotFoundException("tweet does not exist");
 		}
-		return new ContextDto();
+		ContextDto ret = new ContextDto();
+		ret.setTarget(tweetMapper.entityToDto(tweet.get()));
+		tweet.get().getReplies();
+
+		return ret; 
 	}
 
 //	@Override
@@ -187,6 +207,7 @@ public class TweetServiceImpl implements TweetService {
 //
 	@Override
 	public List<UserResponseDto> getUsersMentionedInTweet(Long id) {
+		
 		/*
 		 * Validate tweet - 
 		 * 1. Does the tweet exist? 
