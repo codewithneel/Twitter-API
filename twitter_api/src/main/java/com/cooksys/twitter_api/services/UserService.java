@@ -17,7 +17,7 @@ public interface UserService {
 
 	public ResponseEntity<List<TweetResponseDto>> getAllTweetsCreatedByUser(String username);
 
-	public ResponseEntity<List<UserResponseDto>> getUserFollowers(String username);
+	public List<UserResponseDto> getUserFollowers(String username);
 
 	public UserResponseDto getUserByUsername(String username);
 

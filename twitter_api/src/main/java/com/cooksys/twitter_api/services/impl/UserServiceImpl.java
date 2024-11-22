@@ -74,19 +74,16 @@ public class UserServiceImpl implements UserService {
 	
 	
 	@Override
-	public ResponseEntity<List<UserResponseDto>> getUserFollowers(String username) {
+	public List<UserResponseDto> getUserFollowers(String username) {
 		
 		//Validate username exists and is an active account
 		Optional<User> user = userRepository.findByCredentialsUsername(username);
 		if(user.isEmpty() || user.get().isDeleted()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			throw new NotFoundException("user does not exist");
 		}
 		
 		//Get follower list and check if its empty
 		List<User> followers = user.get().getFollowers();
-		if(followers.size() == 0) {
-			return new ResponseEntity<>(HttpStatus.OK);
-		}
 		
 		//Iterate through the follower list, add and convert non-deleted followers to List<UserResponseDto>
 		List<UserResponseDto> result = new ArrayList<>();
@@ -96,7 +93,7 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 		
-		return new ResponseEntity<>(result, HttpStatus.OK);
+		return result;
 	}
 
 
