@@ -28,4 +28,9 @@ public interface UserService {
 	public void followUser(String username, CredentialsDto credentialsDto);
 
 	public UserResponseDto changeUsername(UserRequestDto userRequestDto, String username);
+
+	List<TweetResponseDto> userMentions(String username);
+
+	void unfollowUser(String username, CredentialsDto credentialsDto);
+
 }

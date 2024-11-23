@@ -25,18 +25,16 @@ public class UserController {
 	
 	private final UserService userService;
 
-//    @GetMapping("/@{username}/mentions")
-//    public List<TweetRequestDto> retrieveUserMentions(@PathVariable String username) {
-//        List<TweetRequestDto> tweets = new ArrayList<>();
-//        return tweets;
-//    }
-//
-//    @PostMapping("/@{username}/unfollow")
-//    public UserResponseDto unfollowUser(@PathVariable String username){
-//        UserResponseDto unfollowed = new UserResponseDto();
-//        return unfollowed;
-//    }
-//
+    @GetMapping("/@{username}/mentions")
+    public List<TweetResponseDto> retrieveUserMentions(@PathVariable String username) {
+        return userService.userMentions(username);
+    }
+
+    @PostMapping("/@{username}/unfollow")
+    public void unfollowUser(@PathVariable String username, @RequestBody CredentialsDto credentialsDto) {
+        userService.unfollowUser(username, credentialsDto);
+    }
+
 //    @GetMapping("/@{username}/feed")
 //    public List<TweetResponseDto> retrieveFeed(@PathVariable String username) {
 //        List<TweetResponseDto> fullFeed = new ArrayList<>();
