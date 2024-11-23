@@ -90,20 +90,22 @@ public class TweetServiceImpl implements TweetService {
 				boolean isTag = false;
 				for(Hashtag h : allTags) {
 					if(h.getLabel().equals(s)) {
+						String temp = s.substring(1);
+						h.setLabel(temp);
 						h.addTweet(ret);
 						ret.addTag(h);
 						isTag = true;
-						hashtagRepository.save(h);
+						hashtagRepository.saveAndFlush(h);
 					}
 				}
 				
 				//if the tag doesnt exist yet we need to create one
 				if(!isTag) {
 					Hashtag tempTag = new Hashtag();
-					tempTag.setLabel(s);
+					tempTag.setLabel(s.substring(1));
 					tempTag.addTweet(ret);
 					ret.addTag(tempTag);
-					hashtagRepository.save(tempTag);
+					hashtagRepository.saveAndFlush(tempTag);
 				}
 			}
 			
@@ -114,7 +116,7 @@ public class TweetServiceImpl implements TweetService {
 					if(mentUser.getCredentials().getUsername().equals(mentionedName)) {
 						ret.addMentioned(mentUser);
 						mentUser.addMentioned(ret);
-						userRepository.save(mentUser);
+						userRepository.saveAndFlush(mentUser);
 					}
 				}
 			}
@@ -178,10 +180,12 @@ public class TweetServiceImpl implements TweetService {
 		if(!check) {
 			throw new BadRequestException("wrong credentials");
 		}
-		liker.addLike(ret);
-		ret.likedBy(liker);
-		userRepository.save(liker);
-		tweetRepository.save(ret);
+		if(!liker.getLikes().contains(ret)) {
+			liker.addLike(ret);
+			userRepository.saveAndFlush(liker);
+			ret.likedBy(liker);
+			tweetRepository.saveAndFlush(ret);
+		}
 	}
 //
 //	@Override

@@ -206,20 +206,23 @@ public class UserServiceImpl implements UserService {
         }
         return userMapper.entitiesToDtos(activeUsers);
     }
-    
+    //
    @Override
    public UserResponseDto changeUsername(UserRequestDto userRequestDto, String username) {
-	   User userToChange = userMapper.DtoToEntity(userRequestDto);
-	   Credentials userCreds = credentialsMapper.DtoToEntityCred(userRequestDto.getCredentials());
-	   Profile userProf = profileMapper.ProfDtoToEnt(userRequestDto.getProfile());
-	   if(!userRepository.existsByCredentialsUsername(userCreds.getUsername()) || userCreds == null || userProf == null || userCreds.getUsername() == null 
-			   || userCreds.getPassword() == null || !userRepository.findByCredentialsUsername(userCreds.getUsername()).get().getCredentials().getPassword().equals(userCreds.getPassword()) 
-			   || !userRepository.findByCredentialsUsername(userCreds.getUsername()).get().getCredentials().getUsername().equals(userCreds.getUsername())) {
-		   
-		   throw new BadRequestException("incorrect username/password");
+	   
+	   if(userRequestDto == null || userRequestDto.getCredentials() == null || userRequestDto.getProfile() == null ||
+				userRequestDto.getCredentials().getUsername() == null || userRequestDto.getCredentials().getPassword() == null) {
+		   throw new BadRequestException("bad info");
 	   }
-	   userToChange.getCredentials().setUsername(username);
-	   userRepository.save(userToChange);
-	   return userMapper.entityToDto(userToChange);
+	   
+	   Optional<User> user = userRepository.findByCredentialsUsername(userRequestDto.getCredentials().getUsername());
+	   
+		if(user.isEmpty() || user.get().isDeleted()|| !userRequestDto.getCredentials().getPassword().equals(user.get().getCredentials().getPassword())) {
+			throw new NotFoundException("no user is here");
+		}
+	  
+	   user.get().getCredentials().setUsername(username);
+	   
+	   return userMapper.entityToDto(userRepository.saveAndFlush(user.get()));
    }
 }
