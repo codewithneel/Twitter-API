@@ -187,12 +187,31 @@ public class TweetServiceImpl implements TweetService {
 			tweetRepository.saveAndFlush(ret);
 		}
 	}
-//
-//	@Override
-//	public TweetResponseDto replyToTweet(Long id, CredentialsDto credentialsDto) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
+
+	@Override
+	public TweetResponseDto replyToTweet(Long id, CredentialsDto credentialsDto) {
+		// TODO Auto-generated method stub
+		if(id == null || credentialsDto == null) {
+			throw new BadRequestException("id and credentials cannot be null");
+		}
+
+		if(tweetRepository.findById(id).get() == null) {
+			throw new NotFoundException("Tweet does not exist");
+		}
+
+		if(tweetRepository.findById(id).get().isDeleted() == true) {
+			throw new NotFoundException("Tweet has been deleted");
+		}
+		Credentials credentials = credentialsMapper.DtoToEntityCred(credentialsDto);
+
+
+
+		String Username = credentials.getUsername();
+
+		Tweet tweet = tweetRepository.findById(id).get();
+
+		return null;
+	}
 
 	@Override
 	public TweetResponseDto repostTweet(Long id, CredentialsDto credentialsDto) {
@@ -300,5 +319,6 @@ public class TweetServiceImpl implements TweetService {
 	
 		return res;
 	}
+
 
 }

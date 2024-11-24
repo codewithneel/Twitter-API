@@ -23,10 +23,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -188,13 +186,7 @@ public class UserServiceImpl implements UserService {
 
 	}
 
-	//    @Override
-//    public List<ProfileDto> getProfiles() {
-//        return null;
-//    }
-//
-//
-//
+
 	@Override
 	public List<UserResponseDto> getUsers() {
 		List<User> allUsers = userRepository.findAll();
@@ -232,22 +224,28 @@ public class UserServiceImpl implements UserService {
 	public List<TweetResponseDto> userMentions(String username) {
 		if (username == null) {
 			throw new BadRequestException("bad info");
-		} else if (username.isEmpty() || username.equals("")) {
+		}
+		if (username.isEmpty() || username.equals("")) {
 			throw new NotFoundException("Unable to retrieve information");
-		} else {
-			List<TweetResponseDto> searchTweets = new ArrayList<>();
-			Optional<User> searched = userRepository.findByCredentialsUsername(username);
-			for (Tweet tweet : tweetRepository.findAll()) {
-				if (tweet.getMentionedUsers().contains(searched) && !tweet.isDeleted()) {
-					searchTweets.add(tweetMapper.entityToDto(tweet));
-				}
-			}
-			if (searchTweets.isEmpty()) {
-				throw new NotFoundException("Unable to retrieve information");
-			} else {
-				return searchTweets;
+		}
+		if(username.charAt(0)=='@'){
+			username=username.substring(1);
+		}
+
+		List<TweetResponseDto> searchTweets = new ArrayList<>();
+		Optional<User> searched = userRepository.findByCredentialsUsername(username);
+		for (Tweet tweet : tweetRepository.findAll()) {
+			if (tweet.getMentionedUsers().contains(searched) && !tweet.isDeleted()) {
+				searchTweets.add(tweetMapper.entityToDto(tweet));
 			}
 		}
+
+		if (searchTweets.isEmpty()) {
+			throw new NotFoundException("Unable to retrieve information");
+		} else {
+			return searchTweets;
+		}
+
 
 	}
 
@@ -258,19 +256,113 @@ public class UserServiceImpl implements UserService {
 			throw new BadRequestException("bad info");
 		}
 
-		Optional<User> user = userRepository.findByCredentialsUsername(credentialsDto.getUsername());
-		if (user.isEmpty()) {
-			throw new BadRequestException("cannot unfollow user -> user does not exist!");
+		if(username.charAt(0)=='@'){
+			username=username.substring(1);
 		}
 
 		Optional<User> follower = userRepository.findByCredentialsUsername(credentialsDto.getUsername());
 		if (follower.isEmpty()) {
 			throw new BadRequestException("cannot unfollow user -> user does not exist!");
+		} else {
+			if (!follower.get().getCredentials().getPassword().equals(credentialsDto.getPassword())) {
+				throw new BadRequestException("invalid credentials");
+			}
 		}
 
-		List<User> followingUsers = user.get().getFollowers();
-		if (followingUsers.contains(follower)) {
-			followingUsers.remove(follower);
+		Optional<User> followed = userRepository.findByCredentialsUsername(username);
+		if (followed.isEmpty()) {
+			throw new BadRequestException("cannot unfollow user -> user does not exist!");
+		}
+
+		if (followed.get().getFollowers().contains(follower.get())) {
+			followed.get().getFollowers().remove(follower.get());
+		} else {
+			throw new BadRequestException("cannot unfollow user -> user not followed!");
+		}
+
+		follower.get().getFollowing().remove(followed.get());
+
+	}
+
+	// User Tweet feed
+	@Override
+	public List<TweetResponseDto> userfeed(String username) {
+		if(username == null || username.isEmpty()) {
+			throw new BadRequestException("bad info");
+		}
+
+		if(username.charAt(0)=='@'){
+			username=username.substring(1);
+		}
+
+		Optional<User> user = userRepository.findByCredentialsUsername(username);
+		if(user.isEmpty()) {
+			throw new BadRequestException("cannot unfollow user -> user does not exist!");
+		}
+
+		List<Tweet> tweets = tweetRepository.findAll();
+		List<TweetResponseDto> tweetResponseDtos = new ArrayList<>();
+		for (Tweet tweet : tweets) {
+			// captures original tweets from user
+			if( tweet.getAuthor().equals(user) && !tweet.isDeleted()) {
+				tweetResponseDtos.add(tweetMapper.entityToDto(tweet));
+			}
+
+			// capture replies to tweets from user
+			if(tweet.getInReplyTo().getAuthor().equals(user) && !tweet.isDeleted()) {
+				tweetResponseDtos.add(tweetMapper.entityToDto(tweet));
+			}
+
+			// captures repost of tweets by user
+			if(tweet.getRepostOf().getAuthor().equals(user) && !tweet.isDeleted()) {}
+		}
+
+//		List<TweetResponseDto> sorted = sortTweetsByTimeStamp(tweetResponseDtos);
+//
+//		return sortTweetsByTimeStamp(tweetResponseDtos);
+
+		return null;
+
+	}
+
+	// Not yet fully functional
+	@Override
+	public List<UserResponseDto> getUsersFollowing(String username) {
+		if(username == null || username.isEmpty()) {
+			throw new BadRequestException("bad info");
+		}
+
+		Optional<User> user = userRepository.findByCredentialsUsername(username);
+		if(user.isEmpty()) {
+			throw new BadRequestException("cannot unfollow user -> user does not exist!");
+		}
+
+
+		return userMapper.entitiesToDtos(user.get().getFollowing());
+	}
+
+	// Name validator, not yet fully functional
+	@Override
+	public boolean validateUsername(String username){
+		if(username == null || username.isEmpty() || username.equals("")) {
+			throw new BadRequestException("bad info");
+		}
+
+		Optional<User> target = userRepository.findByCredentialsUsername(username);
+		if(target.isEmpty() || target.get().isDeleted()) {
+			return false;
+		} else {
+			return true;
 		}
 	}
+
+	public void sortTweetsByTimeStamp (List<TweetResponseDto> tweets) {
+		Collections.sort(tweets, new Comparator<TweetResponseDto>() {
+			@Override
+			public int compare(TweetResponseDto t1, TweetResponseDto t2) {
+				return t1.getPosted().compareTo(t2.getPosted());
+			}
+		});
+	}
+
 }

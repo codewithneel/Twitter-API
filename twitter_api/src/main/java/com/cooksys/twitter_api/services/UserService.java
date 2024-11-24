@@ -33,4 +33,9 @@ public interface UserService {
 
 	void unfollowUser(String username, CredentialsDto credentialsDto);
 
+	List<TweetResponseDto> userfeed(String username);
+
+	List<UserResponseDto> getUsersFollowing(String username);
+
+	boolean validateUsername(String username);
 }
