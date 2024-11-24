@@ -189,30 +189,34 @@ public class TweetServiceImpl implements TweetService {
 	}
 
 	@Override
-	public TweetResponseDto replyTweet(Long id, String content, CredentialsDto credentialsDto) {
+	public TweetResponseDto replyTweet(Long id, TweetRequestDto tweetRequestDto) {
 		// TODO Auto-generated method stub
-		if(id==null || content==null || content.isEmpty() || credentialsDto == null) {
+		if(id==null || tweetRequestDto == null || tweetRequestDto.getContent() == null || tweetRequestDto.getCredentials() == null || tweetRequestDto.getCredentials().getUsername() == null || tweetRequestDto.getCredentials().getPassword() == null) {
+			
 			throw new BadRequestException("Invalid request");
 		}
 
-		Credentials credCheckBody = credentialsMapper.DtoToEntityCred(credentialsDto);
+		Credentials credCheckBody = credentialsMapper.DtoToEntityCred(tweetRequestDto.getCredentials());
 		String username = credCheckBody.getUsername();
 		Optional<User> check = userRepository.findByCredentialsUsername(username);
-		if(!check.get().getCredentials().getPassword().equals(credCheckBody.getPassword())) {
+		if(check.isEmpty() || check.get().isDeleted() || !check.get().getCredentials().getPassword().equals(credCheckBody.getPassword())) {
 			throw new BadRequestException("wrong credentials");
 		}
 
 		Optional<Tweet> ret = tweetRepository.findById(id);
-		if(!ret.isPresent() || ret.get().isDeleted()) {
+		if(ret.isEmpty() || ret.get().isDeleted()) {
 			throw new NotFoundException("Tweet does not exist");
 		}
 
         Tweet reply = new Tweet();
 		reply.setAuthor(check.get());
-		reply.setContent(content);
+		reply.setContent(tweetRequestDto.getContent());
 		reply.setInReplyTo(ret.get());
+		reply.setDeleted(false);
+		reply.setRepostOf(null);
+		
 
-		String[] contentcheck = content.split(" ");
+		String[] contentcheck = tweetRequestDto.getContent().split(" ");
 		for(String s : contentcheck) {
 
 			//if we have a hashtag we need to see if that is already in the database and assign the connections
@@ -255,8 +259,8 @@ public class TweetServiceImpl implements TweetService {
 		}
 
 		ret.get().getReplies().add(reply);
-		tweetRepository.save(ret.get());
-		tweetRepository.save(reply);
+		tweetRepository.saveAndFlush(ret.get());
+		tweetRepository.saveAndFlush(reply);
 
 		return tweetMapper.entityToDto(reply);
 	}
@@ -325,7 +329,23 @@ public class TweetServiceImpl implements TweetService {
 		}
 		ContextDto ret = new ContextDto();
 		ret.setTarget(tweetMapper.entityToDto(tweet.get()));
-		tweet.get().getReplies();
+		List<TweetResponseDto> after = new ArrayList<>();
+		for(Tweet reply : tweet.get().getReplies()) {
+			if(!reply.isDeleted()) {
+				after.add(tweetMapper.entityToDto(reply));
+			}
+		}
+		ret.setAfter(after);
+		ArrayList<TweetResponseDto> before = new ArrayList<>();
+		Tweet inReplyTo = tweet.get().getInReplyTo();
+		if(inReplyTo == null) {
+			ret.setBefore(before);
+		} else {
+			if(inReplyTo != null || !inReplyTo.isDeleted()) {
+				before.add(tweetMapper.entityToDto(inReplyTo));
+				ret.setBefore(before);
+			}
+		}
 
 		return ret; 
 	}

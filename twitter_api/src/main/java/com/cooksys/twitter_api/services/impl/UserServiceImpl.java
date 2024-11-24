@@ -234,17 +234,17 @@ public class UserServiceImpl implements UserService {
 
 		List<TweetResponseDto> searchTweets = new ArrayList<>();
 		Optional<User> searched = userRepository.findByCredentialsUsername(username);
+		
+		if(searched.isEmpty() || searched.get().isDeleted()) {
+			throw new NotFoundException("User does not exist");
+		}
 		for (Tweet tweet : tweetRepository.findAll()) {
-			if (tweet.getMentionedUsers().contains(searched) && !tweet.isDeleted()) {
+			if (tweet.getMentionedUsers().contains(searched.get()) && !tweet.isDeleted()) {
 				searchTweets.add(tweetMapper.entityToDto(tweet));
 			}
 		}
 
-		if (searchTweets.isEmpty()) {
-			throw new NotFoundException("Unable to retrieve information");
-		} else {
-			return searchTweets;
-		}
+		return searchTweets;
 
 
 	}
@@ -301,45 +301,31 @@ public class UserServiceImpl implements UserService {
 		}
 
 		Optional<User> user = userRepository.findByCredentialsUsername(username);
-		if(user.isEmpty()) {
+		if(user.isEmpty() || user.get().isDeleted()) {
 			throw new BadRequestException("cannot unfollow user -> user does not exist!");
 		}
 
 		List<Tweet> tweets = tweetRepository.findAll();
-		List<User> following = user.get().getFollowing();
-		for(User u : following){
-			if(u.isDeleted()){
-				following.remove(u);
+		List<User> following = new ArrayList<>();
+		for(User u : user.get().getFollowing()){
+			if(!u.isDeleted()){
+				following.add(u);
 			}
 		}
 		List<TweetResponseDto> tweetResponseDtos = new ArrayList<>();
-		for(User u : following){
-			for (Tweet tweet : tweets) {
+		for(Tweet tweet : tweets){
+			for (User u : following) {
 				if(!tweet.isDeleted()){
 					// captures original tweets from user
-					if( tweet.getAuthor().equals(user) || tweet.getAuthor().equals(u)) {
-						tweetResponseDtos.add(tweetMapper.entityToDto(tweet));
-					}
-
-					// capture replies to tweets from user
-					if(tweet.getInReplyTo().getAuthor().equals(user) || tweet.getInReplyTo().getAuthor().equals(u)) {
-						tweetResponseDtos.add(tweetMapper.entityToDto(tweet));
-					}
-
-					// captures repost of tweets by user
-					if(tweet.getRepostOf().getAuthor().equals(user) || tweet.getRepostOf().getAuthor().equals(u)) {
+					if( tweet.getAuthor().equals(user.get()) || tweet.getAuthor().equals(u)) {
 						tweetResponseDtos.add(tweetMapper.entityToDto(tweet));
 					}
 				}
 			}
 		}
 
-		Collections.reverse(tweetResponseDtos);
-		if(tweetResponseDtos.isEmpty()){
-			throw new BadRequestException("Unable to retrieve information");
-		} else {
-			return tweetResponseDtos;
-		}
+		Collections.sort(tweetResponseDtos);
+		return tweetResponseDtos.reversed();
 
 	}
 
