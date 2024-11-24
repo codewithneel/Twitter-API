@@ -24,7 +24,7 @@ public class HashtagServiceImpl implements HashtagService {
 	private final HashtagRepository hashtagRepository;
 	private final HashtagMapper hashtagMapper;
 	private final TweetMapper tweetMapper;
-	
+
 	@Override
 	public ResponseEntity<List<HashtagDto>> getAllTags() {
 		return new ResponseEntity<>(hashtagMapper.entitiesToDtos(hashtagRepository.findAll()), HttpStatus.OK);
@@ -48,4 +48,23 @@ public class HashtagServiceImpl implements HashtagService {
 		List<TweetResponseDto> ret = tweetMapper.entitiesToDtos(tagForTweets.getTweets());
 		return ret;
 	}
+
+	@Override
+	public boolean validateTag(String tag) {
+		if(tag == null) {
+			return false;
+		}
+		if(tag.substring(0,1) == "#"){
+			tag = tag.substring(1);
+		}
+
+		List<Hashtag> allTags = hashtagRepository.findAll();
+		for(Hashtag h : allTags) {
+			if(h.getLabel().equals(tag)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }

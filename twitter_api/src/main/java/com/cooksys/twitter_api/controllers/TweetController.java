@@ -51,11 +51,11 @@ public class TweetController {
 	public void likeTweet(@PathVariable Long id, @RequestBody CredentialsDto credentialsDto) {
 		tweetService.likeTweet(id, credentialsDto); 
 	}
-//	
-//	@PostMapping("/{id}/reply")
-//	public TweetResponseDto replyToTweet(@PathVariable Long id, @RequestBody CredentialsDto credentialsDto) {
-//		return tweetService.replyToTweet(id, credentialsDto); 
-//	}
+
+	@PostMapping("/{id}/reply")
+	public TweetResponseDto replyToTweet(@PathVariable Long id, @ PathVariable String content, @RequestBody CredentialsDto credentialsDto) {
+		return tweetService.replyTweet(id, content, credentialsDto);
+	}
 	
 	@PostMapping("/{id}/repost")
 	public TweetResponseDto repostTweet(@PathVariable Long id, @RequestBody CredentialsDto credentialsDto) {
@@ -77,16 +77,16 @@ public class TweetController {
 		return tweetService.getContextOfTweet(id);
 	}
 	
-//	@GetMapping("/{id}/replies")
-//	public List<TweetResponseDto> getDirectRepliesToTweet(@PathVariable Long id){
-//		return tweetService.getDirectRepliesToTweet(id);
-//	}
-//	
-//	@GetMapping("/{id}/reposts")
-//	public List<TweetResponseDto> getDirectRepostsOfTweet(@PathVariable Long id){
-//		return tweetService.getDirectRepostsOfTweet(id);
-//	}
-//	
+	@GetMapping("/{id}/replies")
+	public List<TweetResponseDto> getDirectRepliesToTweet(@PathVariable Long id){
+		return tweetService.getDirectRepliesToTweet(id);
+	}
+
+	@GetMapping("/{id}/reposts")
+	public List<TweetResponseDto> getDirectRepostsOfTweet(@PathVariable Long id){
+		return tweetService.getDirectRepostsOfTweet(id);
+	}
+
 	@GetMapping("/{id}/mentions")
 	public List<UserResponseDto> getUsersMentionedInTweet(@PathVariable Long id){
 		return tweetService.getUsersMentionedInTweet(id);

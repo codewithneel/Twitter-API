@@ -31,4 +31,9 @@ public class HashtagController {
 	public List<TweetResponseDto> getTweetsFromTag(@PathVariable String label){
 		return hashtagService.getTweetsFromTag(label);
 	}
+
+	@GetMapping("/validate/tag/exists/{label}")
+	public boolean tagExists(@PathVariable String label){
+		return hashtagService.validateTag(label);
+	}
 }

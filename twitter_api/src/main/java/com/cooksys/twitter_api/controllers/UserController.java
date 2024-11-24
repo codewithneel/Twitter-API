@@ -25,24 +25,23 @@ public class UserController {
 	
 	private final UserService userService;
 
-//    @GetMapping("/@{username}/mentions")
-//    public List<TweetRequestDto> retrieveUserMentions(@PathVariable String username) {
-//        List<TweetRequestDto> tweets = new ArrayList<>();
-//        return tweets;
-//    }
-//
-//    @PostMapping("/@{username}/unfollow")
-//    public UserResponseDto unfollowUser(@PathVariable String username){
-//        UserResponseDto unfollowed = new UserResponseDto();
-//        return unfollowed;
-//    }
-//
-//    @GetMapping("/@{username}/feed")
-//    public List<TweetResponseDto> retrieveFeed(@PathVariable String username) {
-//        List<TweetResponseDto> fullFeed = new ArrayList<>();
-//        return fullFeed;
-//    }
-//
+    // Functional
+    @GetMapping("/@{username}/mentions")
+    public List<TweetResponseDto> retrieveUserMentions(@PathVariable String username) {
+        return userService.userMentions(username);
+    }
+
+    //Still issues, fails on the Second unfollows first, not sure what to return.
+    @PostMapping("/@{username}/unfollow")
+    public void unfollowUser(@PathVariable String username, @RequestBody CredentialsDto credentialsDto) {
+        userService.unfollowUser(username, credentialsDto);
+    }
+
+    @GetMapping("/@{username}/feed")
+    public List<TweetResponseDto> retrieveFeed(@PathVariable String username) {
+        return userService.userfeed(username);
+    }
+
     @PostMapping("/@{username}/follow")
     public void followUser(@PathVariable String username, @RequestBody CredentialsDto credentialsDto){
         userService.followUser(username, credentialsDto);
@@ -83,4 +82,11 @@ public class UserController {
     public UserResponseDto changeUsername(@RequestBody UserRequestDto userRequestDto, @PathVariable String username) {
     	return userService.changeUsername(userRequestDto, username);
     }
+
+    // Not fully functional, failing SECONDUSER Unfollow FIRSTUSER test
+    @GetMapping("/@{username}/following")
+    public List<UserResponseDto> getUserFollowing(@RequestBody @PathVariable String username) {
+        return userService.getUsersFollowing(username);
+    }
+
 }
