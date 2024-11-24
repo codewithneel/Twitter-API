@@ -89,9 +89,4 @@ public class UserController {
         return userService.getUsersFollowing(username);
     }
 
-    // Not fully functional, need to check again
-    @GetMapping("/validate/username/exists/@{username}")
-    public boolean validateUsernameExists(@PathVariable String username) {
-        return userService.validateUsername(username);
-    }
 }

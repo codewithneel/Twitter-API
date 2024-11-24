@@ -37,5 +37,4 @@ public interface UserService {
 
 	public List<UserResponseDto> getUsersFollowing(String username);
 
-	public boolean validateUsername(String username);
 }

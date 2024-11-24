@@ -267,6 +267,9 @@ public class UserServiceImpl implements UserService {
 			if (!follower.get().getCredentials().getPassword().equals(credentialsDto.getPassword())) {
 				throw new BadRequestException("invalid credentials");
 			}
+			if (follower.get().isDeleted()) {
+				throw new BadRequestException("cannot unfollow user -> user does not exist!");
+			}
 		}
 
 		Optional<User> followed = userRepository.findByCredentialsUsername(username);
@@ -276,11 +279,10 @@ public class UserServiceImpl implements UserService {
 
 		if (followed.get().getFollowers().contains(follower.get())) {
 			followed.get().getFollowers().remove(follower.get());
+			follower.get().getFollowing().remove(followed.get());
 		} else {
 			throw new BadRequestException("cannot unfollow user -> user not followed!");
 		}
-
-		follower.get().getFollowing().remove(followed.get());
 
 		userRepository.saveAndFlush(follower.get());
 		userRepository.saveAndFlush(followed.get());
@@ -341,7 +343,7 @@ public class UserServiceImpl implements UserService {
 
 	}
 
-	// Not yet fully functional
+	// Seems to be functional
 	@Override
 	public List<UserResponseDto> getUsersFollowing(String username) {
 		if(username == null || username.isEmpty()) {
@@ -353,30 +355,15 @@ public class UserServiceImpl implements UserService {
 			throw new BadRequestException("cannot unfollow user -> user does not exist!");
 		}
 
-		return userMapper.entitiesToDtos(user.get().getFollowing());
-	}
-
-	// Name validator, not yet fully functional
-	@Override
-	public boolean validateUsername(String username){
-		if(username == null || username.isEmpty() || username.equals("")) {
-			throw new BadRequestException("bad info");
-		}
-
-		if(username.charAt(0)=='@'){
-			username=username.substring(1);
-		}
-
-		List<User> target = new ArrayList<>();
-		for (User user : userRepository.findAll()) {
-			target.add(user);
-		}
-		for(User u : target){
-			if(u.getCredentials().getUsername().equals(username)){
-				return true;
+		List<User> following = new ArrayList<>();
+		for (User u : user.get().getFollowing()) {
+			if (!u.isDeleted()) {
+				following.add(u);
 			}
 		}
-		return false;
+
+		return userMapper.entitiesToDtos(following);
 	}
+
 
 }
