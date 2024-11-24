@@ -282,6 +282,9 @@ public class UserServiceImpl implements UserService {
 
 		follower.get().getFollowing().remove(followed.get());
 
+		userRepository.saveAndFlush(follower.get());
+		userRepository.saveAndFlush(followed.get());
+
 	}
 
 	// User Tweet feed
@@ -301,27 +304,40 @@ public class UserServiceImpl implements UserService {
 		}
 
 		List<Tweet> tweets = tweetRepository.findAll();
+		List<User> following = user.get().getFollowing();
+		for(User u : following){
+			if(u.isDeleted()){
+				following.remove(u);
+			}
+		}
 		List<TweetResponseDto> tweetResponseDtos = new ArrayList<>();
-		for (Tweet tweet : tweets) {
-			// captures original tweets from user
-			if( tweet.getAuthor().equals(user) && !tweet.isDeleted()) {
-				tweetResponseDtos.add(tweetMapper.entityToDto(tweet));
-			}
+		for(User u : following){
+			for (Tweet tweet : tweets) {
+				if(!tweet.isDeleted()){
+					// captures original tweets from user
+					if( tweet.getAuthor().equals(user) || tweet.getAuthor().equals(u)) {
+						tweetResponseDtos.add(tweetMapper.entityToDto(tweet));
+					}
 
-			// capture replies to tweets from user
-			if(tweet.getInReplyTo().getAuthor().equals(user) && !tweet.isDeleted()) {
-				tweetResponseDtos.add(tweetMapper.entityToDto(tweet));
-			}
+					// capture replies to tweets from user
+					if(tweet.getInReplyTo().getAuthor().equals(user) || tweet.getInReplyTo().getAuthor().equals(u)) {
+						tweetResponseDtos.add(tweetMapper.entityToDto(tweet));
+					}
 
-			// captures repost of tweets by user
-			if(tweet.getRepostOf().getAuthor().equals(user) && !tweet.isDeleted()) {}
+					// captures repost of tweets by user
+					if(tweet.getRepostOf().getAuthor().equals(user) || tweet.getRepostOf().getAuthor().equals(u)) {
+						tweetResponseDtos.add(tweetMapper.entityToDto(tweet));
+					}
+				}
+			}
 		}
 
-//		List<TweetResponseDto> sorted = sortTweetsByTimeStamp(tweetResponseDtos);
-//
-//		return sortTweetsByTimeStamp(tweetResponseDtos);
-
-		return null;
+		Collections.reverse(tweetResponseDtos);
+		if(tweetResponseDtos.isEmpty()){
+			throw new BadRequestException("Unable to retrieve information");
+		} else {
+			return tweetResponseDtos;
+		}
 
 	}
 
@@ -337,7 +353,6 @@ public class UserServiceImpl implements UserService {
 			throw new BadRequestException("cannot unfollow user -> user does not exist!");
 		}
 
-
 		return userMapper.entitiesToDtos(user.get().getFollowing());
 	}
 
@@ -348,21 +363,20 @@ public class UserServiceImpl implements UserService {
 			throw new BadRequestException("bad info");
 		}
 
-		Optional<User> target = userRepository.findByCredentialsUsername(username);
-		if(target.isEmpty() || target.get().isDeleted()) {
-			return false;
-		} else {
-			return true;
+		if(username.charAt(0)=='@'){
+			username=username.substring(1);
 		}
-	}
 
-	public void sortTweetsByTimeStamp (List<TweetResponseDto> tweets) {
-		Collections.sort(tweets, new Comparator<TweetResponseDto>() {
-			@Override
-			public int compare(TweetResponseDto t1, TweetResponseDto t2) {
-				return t1.getPosted().compareTo(t2.getPosted());
+		List<User> target = new ArrayList<>();
+		for (User user : userRepository.findAll()) {
+			target.add(user);
+		}
+		for(User u : target){
+			if(u.getCredentials().getUsername().equals(username)){
+				return true;
 			}
-		});
+		}
+		return false;
 	}
 
 }

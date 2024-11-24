@@ -29,13 +29,13 @@ public interface UserService {
 
 	public UserResponseDto changeUsername(UserRequestDto userRequestDto, String username);
 
-	List<TweetResponseDto> userMentions(String username);
+	public List<TweetResponseDto> userMentions(String username);
 
-	void unfollowUser(String username, CredentialsDto credentialsDto);
+	public void unfollowUser(String username, CredentialsDto credentialsDto);
 
-	List<TweetResponseDto> userfeed(String username);
+	public List<TweetResponseDto> userfeed(String username);
 
-	List<UserResponseDto> getUsersFollowing(String username);
+	public List<UserResponseDto> getUsersFollowing(String username);
 
-	boolean validateUsername(String username);
+	public boolean validateUsername(String username);
 }
